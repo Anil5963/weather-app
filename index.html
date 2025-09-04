@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather app</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body class="flex justify-center items-center min-h-screen">
+    <div class="h-[600px] w-[90%] max-w-[350px] rounded-xl">
+        <div class="flex flex-col bg-blue-400 h-[450px] w-[300px] rounded-xl">
+
+            <div class="flex justify-between gap-4 p-3">
+                <input type="text" class="input flex items-center pl-3 h-10 w-[220px] rounded-xl font-bold"
+                    placeholder="Enter City Name">
+                <button
+                    class="search flex justify-center items-center h-10 w-10 pl-1 rounded-2xl bg-blue-100 text-white material-icons text-gray-600">
+                    search
+                </button>
+            </div>
+
+            <div class="flex justify-center items-center h-[150px] w-[300px]">
+                <img src="images/download.png" alt="img" class="h-[150px] w-[150px] object-cover opacity-80">
+            </div>
+
+            <h1 class="city flex justify-center text-4xl font-bold mb-3">Pokhara</h1>
+
+            <div class="flex justify-center gap-4 px-2">
+                <span class="temperature text-2xl font-bold">25°C</span>
+                <span class="weather text-xl font-bold text-yellow-200">Sunny</span>
+            </div>
+
+            <div class="flex justify-center gap-4 pt-8">
+                <div class="flex flex-col justify-center items-center h-20 w-20">
+                    <img src="images/humidity-vector-icon-png_261824-removebg-preview.png" alt="humidity"
+                        class="h-10 w-10 object-cover">
+                    <p class="humidity text-xl font-bold"></p>
+                    <p class="text-sm">Humidity</p>
+                </div>
+                <div class="flex flex-col justify-center items-center h-20 w-20">
+                    <img src="images/istockphoto-1368763816-612x612-removebg-preview.png" alt="wind"
+                        class="h-10 w-10 object-cover">
+                    <p class="windspeed text-xl font-bold"></p>
+                    <p class="text-sm">Wind Speed</p>
+                </div>
+                <div class="flex flex-col justify-center items-center h-20 w-20">
+                    <img src="images/252035.png" alt="cloud" class="h-10 w-10 object-cover">
+                    <p class="cloudcover text-xl font-bold"></p>
+                    <p class="text-sm">Cloud Cover</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-blue-200 h-[150px] w-[300px] rounded-xl">
+            <div class="flex justify-between pt-5 px-5">
+                <p class="font-bold text-sm">Today</p>
+                <p class="font-bold text-sm text-yellow-400">Next 7 days</p>
+            </div>
+
+            <div class="flex justify-between gap-2 pt-4 px-2">
+                <div class="flex flex-col items-center h-16 w-16 gap-1">
+                    <p class="font-bold text-sm">7 am</p>
+                    <div>
+                        <img src="images/download.png" alt="img" class="h-8 w-8 object-cover">
+                    </div>
+                    <p class="font-bold text-sm">Cloudy</p>
+                </div>
+
+                <div class="flex flex-col items-center h-16 w-16 gap-1">
+                    <p class="font-bold text-sm">8 am</p>
+                    <div>
+                        <img src="images/download.png" alt="img" class="h-8 w-8 object-cover">
+                    </div>
+                    <p class="font-bold text-sm">Cloudy</p>
+                </div>
+
+                <div class="flex flex-col items-center h-16 w-16 gap-1">
+                    <p class="font-bold text-sm">9 am</p>
+                    <div>
+                        <img src="images/download.png" alt="img" class="h-8 w-8  object-cover">
+                    </div>
+                    <p class="font-bold text-sm">Cloudy</p>
+                </div>
+
+                <div class="flex flex-col items-center h-16 w-16 gap-1">
+                    <p class="font-bold text-sm">10 am</p>
+                    <div>
+                        <img src="images/download.png" alt="img" class="h-8 w-8  object-cover">
+                    </div>
+                    <p class="font-bold text-sm">Cloudy</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.querySelector(".input")
+        const searchbtn = document.querySelector(".search")
+        const city = document.querySelector(".city")
+        const temperature = document.querySelector(".temperature")
+        const weather = document.querySelector(".weather")
+        const humidity = document.querySelector(".humidity")
+        const windspeed = document.querySelector(".windspeed")
+        const cloudcover = document.querySelector(".cloudcover")
+
+        async function getData(cityName) {
+            const wdetails = await fetch(`http://api.weatherapi.com/v1/current.json?key=3597a82169bf4ee5acb94019250309&q=${cityName}&aqi=yes`)
+            return await wdetails.json()
+        }
+
+        searchbtn.addEventListener("click", async () => {
+            const inputval = input.value
+            const result = await getData(inputval)
+
+            // if (city.textContent === "") {
+            //     alert("Please Enter City Name")
+            // } else if(inputval != result.location.name) {
+            //     city.textContent = "Not Found"
+            // } else {
+            //     city.textContent = result.location.name
+            // }
+
+            if (inputval === "") {
+                alert("Please Enter City Name")
+            } else if (inputval.toLowerCase() !== result.location.name.toLowerCase()) {
+                city.textContent = "Not Found"
+            } else {
+                city.textContent = result.location.name
+            }
+
+
+            temperature.textContent = `${result.current.temp_c}°C`
+            weather.textContent = result.current.condition.text
+            humidity.textContent = `${result.current.humidity}%`
+            windspeed.textContent = `${result.current.wind_kph}kph`
+            cloudcover.textContent = `${result.current.cloud}%`
+
+        })
+    </script>
+
+
+</body>
+
+</html>
